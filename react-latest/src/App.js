@@ -60,9 +60,11 @@ const App = () => {
 
       <table>
         <thead>
-          {headers.map((header, index) => (
-            <th key={index}>{header}</th>
-          ))}
+          <tr>
+            {headers.map((header, index) => (
+              <th key={index}>{header}</th>
+            ))}
+          </tr>
         </thead>
 
         <tbody>

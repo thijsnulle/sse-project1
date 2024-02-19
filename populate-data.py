@@ -1,6 +1,6 @@
 import json, os, random, string
 
-FOLDERS = ['react-latest']
+FOLDERS = ['react-latest', 'react-legacy']
 NUM_DATA_POINTS = 10000
 HOBBIES = [
     'swimming',
