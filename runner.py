@@ -35,6 +35,7 @@ class Task:
         # 2.1. wait for load
         time.sleep(10)
         # 3. start energibridge
+        print("RUN ENERGIBRIDGE")
         EnergiBridge(self.settings).run(self)
         # 4. Selenium
         print("DO EXPERIMENT")
@@ -43,6 +44,8 @@ class Task:
         # self.stop_energibridge()
         # 6. stop server
         # self.stop_server()
+
+        time.sleep(5)
 
     def install_server(self, react_version):
         print("INSTALL SERVER")
@@ -54,14 +57,21 @@ class Task:
 
     def stop_server(self):
         print("STOPPING SERVER")
-        self.Current_Experiment_Process.send_signal(signal.SIGINT)
+        if sys.platform == "win32":
+            self.Current_Experiment_Process.send_signal(signal.CTRL_C_EVENT)
+        else:
+            self.Current_Experiment_Process.send_signal(signal.SIGINT)
+
 
     def start_energibridge(self, settings):
         print("START ENERGIBRIDGE")
         EnergiBridge(settings).run(self)
 
     def stop_energibridge(self):
-        self.Current_Energibridge_Process.send_signal(signal.SIGINT) # Gives error, maybe ctrl+c not possible
+        if sys.platform == "win32":
+            self.Current_Experiment_Process.send_signal(signal.CTRL_C_EVENT)
+        else:
+            self.Current_Experiment_Process.send_signal(signal.SIGINT)  # Gives error, maybe ctrl+c not possible
 
 
 def generate_tasks(workloads: [Workload], settings):
@@ -84,10 +94,3 @@ def run(workloads: [Workload], settings):
     for task in tasks:
         task.run()
         sleep(settings.sleep)
-
-def main():
-    return
-
-
-if __name__ == '__main__':
-    main()
