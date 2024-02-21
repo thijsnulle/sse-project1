@@ -62,10 +62,9 @@ def main():
         if w.enabled:
             workloads.append(w)
 
-    # if not os.path.isabs(args.output):
-    #     args.output = os.path.join(os.getcwd(), args.output, sys.platform) # Defines folders, but energibridge can't create them [WINDOWS]
-    # args.output = os.path.join(args.output, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-    args.output = os.path.join(os.getcwd(), args.output)
+    if not os.path.isabs(args.output):
+        args.output = os.path.join(os.getcwd(), args.output, sys.platform)
+    args.output = os.path.join(args.output, datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     run(workloads, args)
 
 
