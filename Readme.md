@@ -15,8 +15,7 @@ The runner will install and run the servers for each iteration.
 - [ ] stop react-scripts from opening the browser
 - [ ] download webdrivers
 - [ ] fix arguments given to energibridge after `--` since we don't open the browser from there.
-- [ ] passing ctrl+c to the subprocesses gives an error, might be windows issue
-- [ ] issues with creating files via energibridge, might be windows
+- [ ] issues with `timeout` via subprocess, might be windows
 
 # Errors with Energibridge
 Make sure rapl is running
