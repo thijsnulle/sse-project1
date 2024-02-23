@@ -3,7 +3,8 @@ description: "Open localhost:3000 with Chrome and close the browser"
 enabled: true
 max_execution: 20
 variables:
-  args: https://localhost:3000
-linux-cmd: chrome $args
-macos-cmd: /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome $args
-windows-cmd: chrome.exe $args
+  args: http://localhost:3000
+  script: run-experiment.py chrome
+linux-cmd: python $script $args
+macos-cmd: python $script $args
+windows-cmd: python $script $args

@@ -22,28 +22,32 @@ class Task:
         self.Current_Experiment_Process = None
         self.Current_Energibridge_Process = None
         self.react_version = react_version
+        self.react_version_directory = rf".\{self.react_version}"
+        self.pid = None
 
     @property
     def output_path(self):
-        return os.path.join(self.settings.output, self.workload.name, str(self.id))
+        return os.path.join(self.settings.output, self.workload.name, self.react_version, str(self.id))
 
     def run(self):
         # 1. npm install
-        self.install_server(str(self.react_version))
+        self.install_server(self.react_version_directory)
         # 2. npm start
-        self.load_server(str(self.react_version))
+        self.load_server(self.react_version_directory)
         # 2.1. wait for load
         time.sleep(10)
         # 3. start energibridge
-        print("RUN ENERGIBRIDGE")
+        print("RUN ENERGIBRIDGE AND DO EXPERIMENT")
         EnergiBridge(self.settings).run(self)
         # 4. Selenium
-        print("DO EXPERIMENT")
-        run_tasks(self.workload)
+        # print("DO EXPERIMENT")
+        # run_tasks(self.workload)
         # 5. stop energibridge
         # self.stop_energibridge()
         # 6. stop server
-        # self.stop_server()
+        while self.Current_Energibridge_Process.poll() is None:
+            time.sleep(5)
+        self.stop_server()
 
         time.sleep(5)
 
@@ -53,14 +57,13 @@ class Task:
 
     def load_server(self, react_version):
         print("LOADING SERVER")
-        self.Current_Experiment_Process = subprocess.Popen("npm run start", shell=True, cwd=react_version)
+        self.Current_Experiment_Process = subprocess.Popen([r'C:\Program Files\nodejs\npm.cmd', 'run', 'start'], shell=False, cwd=react_version, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        self.pid = self.Current_Experiment_Process.pid
 
     def stop_server(self):
         print("STOPPING SERVER")
-        if sys.platform == "win32":
-            self.Current_Experiment_Process.send_signal(signal.CTRL_C_EVENT)
-        else:
-            self.Current_Experiment_Process.send_signal(signal.SIGINT)
+        command = ['TASKKILL', '/F', '/T', '/PID', str(self.pid)]
+        subprocess.Popen(command)
 
 
     def start_energibridge(self, settings):
@@ -69,7 +72,7 @@ class Task:
 
     def stop_energibridge(self):
         if sys.platform == "win32":
-            self.Current_Experiment_Process.send_signal(signal.CTRL_C_EVENT)
+            self.Current_Experiment_Process.send_signal(signal.CTRL_BREAK_EVENT)
         else:
             self.Current_Experiment_Process.send_signal(signal.SIGINT)  # Gives error, maybe ctrl+c not possible
 
@@ -78,7 +81,7 @@ def generate_tasks(workloads: [Workload], settings):
     tasks = []
     row = 0
     for workload in workloads:
-        for react_version in [r".\react-latest"]: # , r".\react-legacy"
+        for react_version in ["react-latest", "react-legacy"]:
             for i in range(settings.iterations):
                 tasks.append(Task(i + 1 + (row * settings.iterations), workload, settings, react_version))
             row += 1
