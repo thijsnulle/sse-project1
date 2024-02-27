@@ -4,6 +4,7 @@ import signal
 import subprocess
 import sys
 import time
+from tqdm import tqdm
 from time import sleep
 from EnergiBridge import EnergiBridge
 from Experiment import run_tasks
@@ -94,6 +95,7 @@ def generate_tasks(workloads: [Workload], settings):
 
 def run(workloads: [Workload], settings):
     tasks = generate_tasks(workloads, settings)
-    for task in tasks:
+    for task in tqdm(tasks):
+        tqdm.write(f"Experiment {task.react_version} in {task.workload.name}")
         task.run()
         sleep(settings.sleep)

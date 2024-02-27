@@ -11,7 +11,7 @@ def run_tasks(settings):
     if settings.name == "chrome":
         driver = webdriver.Chrome(r".\chromedriver-win64\chromedriver.exe")
     elif settings.name == "firefox":
-        driver = webdriver.Firefox()  # TODO: PATH/TO/DRIVER
+        driver = webdriver.Firefox(executable_path=".\geckodriver-win64\geckodriver.exe")
     elif settings.name == "safari":
         driver = webdriver.Safari()  # TODO: PATH/TO/DRIVER
 
