@@ -14,7 +14,7 @@ resultLegacy = []
 
 def parse():
     for i in range(1, 33):
-        filename = f"experiment/win32/2024-02-27-00-04-07/chrome/react-latest/{i}.csv"
+        filename = f"data/react-latest/{i}.csv"
     
         # Open the CSV file
         with open(filename, newline='') as csvfile:
@@ -31,8 +31,8 @@ def parse():
             valueDifference = max(values) - min(values)
             valueDifference2 = max(values2) - min(values2)
 
-            #resultLatest.append(valueDifference * pow(valueDifference2, 10))
-            resultLatest.append(valueDifference)
+            resultLatest.append(valueDifference * pow(valueDifference2, 10))
+            # resultLatest.append(valueDifference)
             #print(valueDifference)
             values.clear()
             values2.clear()
@@ -40,7 +40,7 @@ def parse():
     print("===================")
 
     for i in range(33, 65):
-        filename = f"experiment/win32/2024-02-27-00-04-07/chrome/react-legacy/{i}.csv"
+        filename = f"data/react-legacy/{i}.csv"
 
         # Open the CSV file
         with open(filename, newline='') as csvfile:
@@ -57,6 +57,7 @@ def parse():
             valueDifference = max(values) - min(values)
             valueDifference2 = max(values2) - min(values2)
 
+            # resultLegacy.append(valueDifference)
             resultLegacy.append(valueDifference * pow(valueDifference2, 10))
             #print(valueDifference)
             values.clear()
@@ -78,7 +79,7 @@ def graph(resultsLatest, resultsLegacy):
         patch.set_facecolor(color)
 
     # Add labels and title
-    plt.xticks([1, 2], ['react-latest', 'react-legacy'])
+    plt.xticks([1, 2], ['react-legacy', 'react-latest'])
     plt.ylabel('EDP')
     plt.title('Energy Delay Product (EDP), w=10')
 
@@ -106,11 +107,12 @@ def p_value(distribution1, distribution2):
     """
 
 def main():
-    data1, data2 = parse()
+    react_latest_data, react_legacy_data = parse()
    
-    data1 = reject_outliers(data1)
-    data2 = reject_outliers(data2)
-    graph(data1, data2)
+    react_latest_data = reject_outliers(react_latest_data)
+    react_legacy_data = reject_outliers(react_legacy_data)
+
+    graph(react_legacy_data, react_latest_data)
 
 if __name__ == "__main__":
     # Call the main function if the script is executed directly
