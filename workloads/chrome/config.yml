@@ -1,0 +1,10 @@
+name: chrome
+description: "Open localhost:3000 with Chrome and close the browser"
+enabled: true
+max_execution: 20
+variables:
+  args: http://localhost:3000
+  script: run-experiment.py chrome
+linux-cmd: python $script $args
+macos-cmd: python $script $args
+windows-cmd: python $script $args
